@@ -66,7 +66,6 @@ public class AuthService {
             });
         }
 
-
         User user = User.builder()
                 .firstName(request.firstName())
                 .lastName(request.lastName())
@@ -83,7 +82,7 @@ public class AuthService {
                                 request.address().region(),
                                 request.address().countryCode())))
                 .numberPhone(request.numberPhone())
-                .typeDocument(request.typeDocument())
+                .typeDocument(securityConfig.passwordEncoder().encode(request.typeDocument()))
                 .roles(roles)
                 .build();
 

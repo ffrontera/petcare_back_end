@@ -1,6 +1,7 @@
 package com.equipo11.petcare.dto;
 
 import com.equipo11.petcare.domain.user.entity.enums.RoleName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 
@@ -15,6 +16,7 @@ public record RegisterRequest(
         String lastName,
 
         @NotNull(message = "La fecha de nacimiento es obligatoria")
+        @JsonFormat(pattern = "yyyy-MM-dd")
         LocalDate birthdate,
 
         @NotBlank(message = "El correo no puede estar vacío")
