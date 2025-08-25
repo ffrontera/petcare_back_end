@@ -1,5 +1,6 @@
-package com.equipo11.petcare.model;
+package com.equipo11.petcare.domain;
 
+import com.equipo11.petcare.domain.address.entity.Address;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -31,17 +32,9 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false)
-    private String address;
-
-    @Column(nullable = false)
-    private String city;
-
-    @Column(nullable = false)
-    private String region;
-
-    @Column(nullable = false)
-    private String country;
+    @ManyToOne
+    @JoinColumn(name = "address_id", nullable = false)
+    private Address address;
 
     private boolean state;
 

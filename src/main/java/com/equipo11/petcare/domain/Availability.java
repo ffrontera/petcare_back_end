@@ -1,4 +1,4 @@
-package com.equipo11.petcare.model;
+package com.equipo11.petcare.domain;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

@@ -1,9 +1,8 @@
-package com.equipo11.petcare.model;
+package com.equipo11.petcare.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Entity
