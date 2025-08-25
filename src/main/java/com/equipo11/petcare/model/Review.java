@@ -1,0 +1,28 @@
+package com.equipo11.petcare.model;
+
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Entity
+@Table(name = "review")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class Review {
+
+    @Id
+    @GeneratedValue
+    private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "owner_id")
+    private Owner owner;
+
+    @ManyToOne
+    @JoinColumn(name = "sitter_id")
+    private Sitter sitter;
+}
