@@ -38,8 +38,8 @@ public class AuthService {
     @Autowired
     private AuthenticationManager authManager;
 
+    @Autowired
     private JwtUtils jwtUtils;
-
 
     @Autowired
     private final AddressNormalizationService normalizationService;
@@ -53,7 +53,7 @@ public class AuthService {
         Set<String> strRoles = request.roles();
         Set<Role> roles = new HashSet<>();
 
-        if (strRoles == null) {
+        if (strRoles.isEmpty()) {
             Role defaultRole = roleRepo.findByName(RoleName.ROLE_OWNER)
                     .orElseThrow(() -> new RuntimeException("Role no encontrado"));
             roles.add(defaultRole);
