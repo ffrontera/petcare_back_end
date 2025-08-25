@@ -1,5 +1,6 @@
 package com.equipo11.petcare.domain;
 
+import com.equipo11.petcare.domain.user.entity.Owner;
 import jakarta.persistence.*;
 import lombok.*;
 

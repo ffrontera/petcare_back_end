@@ -1,10 +1,11 @@
 package com.equipo11.petcare.dto;
 
-import com.equipo11.petcare.domain.Role;
+import com.equipo11.petcare.domain.user.entity.enums.RoleName;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 public record RegisterRequest(
         @NotBlank(message = "El nombre no puede estar vacío")
@@ -43,6 +44,6 @@ public record RegisterRequest(
         String numberPhone,
 
         @NotNull(message = "El rol es obligatorio")
-        Role role
+        Set<String> roles
 ) {
 }

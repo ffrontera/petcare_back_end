@@ -1,5 +1,8 @@
-package com.equipo11.petcare.domain;
+package com.equipo11.petcare.domain.user.entity;
 
+import com.equipo11.petcare.domain.Availability;
+import com.equipo11.petcare.domain.Booking;
+import com.equipo11.petcare.domain.Review;
 import jakarta.persistence.*;
 import lombok.*;
 
