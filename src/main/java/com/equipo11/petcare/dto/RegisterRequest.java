@@ -46,6 +46,6 @@ public record RegisterRequest(
         String numberPhone,
 
         @NotNull(message = "El rol es obligatorio")
-        Set<String> roles
+        String role
 ) {
 }

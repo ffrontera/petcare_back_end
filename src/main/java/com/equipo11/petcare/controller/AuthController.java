@@ -26,6 +26,6 @@ public class AuthController {
 
     @PostMapping("singup")
     public ResponseEntity<AuthResponse> registerUser(@Valid @RequestBody RegisterRequest request) {
-        return ResponseEntity.ok(authService.register(request));
+        return ResponseEntity.ok(authService.registerUser(request));
     }
 }

@@ -1,13 +1,17 @@
-package com.equipo11.petcare.security.jwt;
+package com.equipo11.petcare.security.service;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.JWTVerifier;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+
 
 @Component
 public class JwtUtils {
@@ -22,13 +26,13 @@ public class JwtUtils {
         return Algorithm.HMAC256(jwtSecret);
     }
 
-    public String generateToken(String username) {
-        Date now = new Date();
-        Date expiry = new Date(now.getTime() + jwtExpirationMs);
+    public String generateToken(String username, String role) {
+        Instant expiry = LocalDateTime.now().plusHours(jwtExpirationMs).toInstant(ZoneOffset.of("-04:00"));
 
         return JWT.create()
+                .withIssuer("petcare")
                 .withSubject(username)
-                .withIssuedAt(now)
+                .withClaim("role", role)
                 .withExpiresAt(expiry)
                 .sign(getAlgorithm());
     }

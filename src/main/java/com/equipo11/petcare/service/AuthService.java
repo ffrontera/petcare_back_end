@@ -11,7 +11,7 @@ import com.equipo11.petcare.dto.RegisterRequest;
 import com.equipo11.petcare.domain.user.entity.User;
 import com.equipo11.petcare.domain.user.repository.UserRepository;
 
-import com.equipo11.petcare.security.jwt.JwtUtils;
+import com.equipo11.petcare.security.service.JwtUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,8 +19,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.Set;
+import static com.equipo11.petcare.domain.user.entity.enums.RoleName.ROLE_OWNER;
 
 @Service
 @RequiredArgsConstructor
@@ -44,26 +43,20 @@ public class AuthService {
     @Autowired
     private final AddressNormalizationService normalizationService;
 
-    public AuthResponse register(RegisterRequest request) {
+    public AuthResponse registerUser(RegisterRequest request) {
 
         if (userRepo.findByEmail(request.email()).isPresent()) {
+
             throw new IllegalArgumentException("Email already in use");
         }
 
-        Set<String> strRoles = request.roles();
-        Set<Role> roles = new HashSet<>();
-
-        if (strRoles.isEmpty()) {
-            Role defaultRole = roleRepo.findByName(RoleName.ROLE_OWNER)
-                    .orElseThrow(() -> new RuntimeException("Role no encontrado"));
-            roles.add(defaultRole);
+        Role role = new Role();
+        if (request.role().isEmpty() || request.role().equals("ROLE_OWNER")) {
+            role = roleRepo.findByName(RoleName.ROLE_OWNER).get();
+        } else if (request.role().equals("ROLLE_SITTER")) {
+            role = roleRepo.findByName(RoleName.ROLE_SITTER).get();
         } else {
-            strRoles.forEach(roleName -> {
-                RoleName rn = RoleName.valueOf("ROLE_SITTER");
-                Role role = roleRepo.findByName(rn)
-                        .orElseThrow(() -> new RuntimeException("Role no encontrado: " + rn));
-                roles.add(role);
-            });
+            throw new IllegalArgumentException("Rol de usuario no encontrado");
         }
 
         User user = User.builder()
@@ -83,19 +76,25 @@ public class AuthService {
                                 request.address().countryCode())))
                 .numberPhone(request.numberPhone())
                 .typeDocument(securityConfig.passwordEncoder().encode(request.typeDocument()))
-                .roles(roles)
+                .role(role)
+                .state(role.getName().equals(ROLE_OWNER))
                 .build();
 
         userRepo.save(user);
 
-
-        return new AuthResponse(jwtUtils.generateToken(user.getUsername()));
+        String role_name = role.getName().toString();
+        return new AuthResponse(jwtUtils.generateToken(user.getUsername(), role_name));
     }
 
     public AuthResponse authUser(AuthRequest request) {
         Authentication auth = authManager.authenticate(new UsernamePasswordAuthenticationToken(
                 request.email(),
                 request.password()));
-        return new AuthResponse(jwtUtils.generateToken(auth.getName()));
+
+        Role role = userRepo.findByEmail(request.email()).get().getRole();
+
+        String role_name = role.getName().toString();
+
+        return new AuthResponse(jwtUtils.generateToken(auth.getName(), role_name));
     }
 }

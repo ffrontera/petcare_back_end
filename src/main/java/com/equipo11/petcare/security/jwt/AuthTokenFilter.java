@@ -1,6 +1,7 @@
 package com.equipo11.petcare.security.jwt;
 
 import com.equipo11.petcare.security.service.CustomUserDetailsService;
+import com.equipo11.petcare.security.service.JwtUtils;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
