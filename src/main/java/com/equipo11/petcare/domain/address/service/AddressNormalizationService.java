@@ -30,7 +30,7 @@ public class AddressNormalizationService {
     private AddressRepository addressRepo;
 
     public Address normalize(ParsedAddress dto) {
-        Country country = countryRepo.findByCountryCode(dto.countryCode())
+        Country country = countryRepo.findByCountryCode(dto.countryCode().toUpperCase())
                 .orElseThrow(() ->
                         new EntityNotFoundException(
                                 "País no encontrado con código: " + dto.countryCode()
@@ -38,10 +38,18 @@ public class AddressNormalizationService {
                 );
 
         Region region = regionRepo.findByNameAndCountry(dto.region(), country)
-                .orElseGet(() -> regionRepo.save(new Region(null, dto.region(), country)));
+                .orElseThrow(() ->
+                        new EntityNotFoundException(
+                                "Provincia no encontrada: " + dto.region()
+                        )
+                );
 
         City city = cityRepo.findByNameAndRegion(dto.city(), region)
-                .orElseGet(() -> cityRepo.save(new City(null, dto.city(), region)));
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "Ciudad no encontrada: " + dto.city()
+                )
+                );
+
 
         return addressRepo.findByStreetNameAndStreetNumberAndCity(
                 dto.streetName(), dto.streetNumber(), city

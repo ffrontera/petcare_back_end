@@ -6,6 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 @Table(name = "regions")
 @Getter
@@ -21,6 +24,14 @@ public class Region {
     private String name;
 
     @ManyToOne
-    @JoinColumn(name = "country_id", nullable = false)
+    @JoinColumn(name = "country_code", referencedColumnName = "country_code", nullable = false)
     private Country country;
+
+    @OneToMany(mappedBy = "region", fetch = FetchType.LAZY)
+    private Set<City> cities = new HashSet<>();
+
+    public Region(String name, Country country) {
+        this.name = name;
+        this.country = country;
+    }
 }
