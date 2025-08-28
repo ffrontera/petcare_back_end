@@ -11,9 +11,12 @@ import java.util.List;
 
 public interface AvailabilityRepository extends JpaRepository<Availability, Long> {
 
+    @Query("SELECT a FROM Availability a WHERE a.sitter.userId = :sitterId " +
+            "AND a.active = true " +
+            "AND (:serviceName IS NULL OR a.serviceName = :serviceName)")
     List<Availability> findBySitterIdAndServiceNameAndActiveTrue(
-            Long sitterId,
-            ServiceName serviceName
+            @Param("sitterId") Long sitterId,
+            @Param("serviceName") ServiceName serviceName
     );
 
     // Verificar solapamiento: hay disponibilidad en el rango [startTime, endTime]
